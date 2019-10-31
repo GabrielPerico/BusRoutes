@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import '../main.dart';
+import 'cadastro.dart';
 
-class Cadastro extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _CadastroState createState() => _CadastroState();
+  _LoginState createState() => _LoginState();
 }
 
-class _CadastroState extends State<Cadastro> {
-  FocusNode _focusNode = new FocusNode();
-
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
+    FocusNode _focusNode = new FocusNode();
     return new Scaffold(
         appBar: PreferredSize(
           child: AppBar(
-            title: Text('Cadastro',style: TextStyle(color: Colors.black),),
-            centerTitle: true,
             backgroundColor: Colors.amber,
             shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(15))),
             elevation: 5,
           ),
-          preferredSize: Size.fromHeight(56),
+          preferredSize: Size.fromHeight(15),
         ),
         body: WillPopScope(
             child: SingleChildScrollView(
@@ -36,7 +34,7 @@ class _CadastroState extends State<Cadastro> {
                     'img/BusRoutes_Logo.png',
                     fit: BoxFit.contain,
                   ),
-                  padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0),
+                  padding: const EdgeInsets.fromLTRB(24.0, 50.0, 24.0, 0),
                 ),
                 Padding(
                     padding: EdgeInsets.all(15),
@@ -74,6 +72,7 @@ class _CadastroState extends State<Cadastro> {
                         ),
                         new Padding(
                           child: new TextFormField(
+                              focusNode: _focusNode,
                               style: TextStyle(color: Colors.black),
                               obscureText: true,
                               decoration: InputDecoration(
@@ -94,31 +93,8 @@ class _CadastroState extends State<Cadastro> {
                                   ))),
                           padding: const EdgeInsets.all(15.0),
                         ),
-                        new Padding(
-                          child: new TextFormField(
-                              focusNode: _focusNode,
-                              style: TextStyle(color: Colors.black),
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  hoverColor: Colors.purple,
-                                  labelStyle:
-                                      new TextStyle(color: Colors.purple),
-                                  focusColor: Colors.purple,
-                                  labelText: "Email",
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ))),
-                          padding: const EdgeInsets.all(15.0),
-                        ),
                         Padding(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 10),
+                          padding: EdgeInsets.only(top: 20.0, bottom: 15),
                           child: new Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -140,13 +116,16 @@ class _CadastroState extends State<Cadastro> {
                               ),
                               RaisedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Cadastro()));
                                 },
                                 shape: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide:
                                         BorderSide(color: Colors.amberAccent)),
-                                child: Text("Cancelar"),
+                                child: Text("Cadastrar"),
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 40.0, vertical: 15.0),
                                 color: Colors.amber,
@@ -155,6 +134,18 @@ class _CadastroState extends State<Cadastro> {
                             ],
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: new InkWell(
+                              child: new Text('Entrar como convidado.',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Cadastro()));
+                              }
+                          ),
+                        )
                       ]),
                     ))
               ],
