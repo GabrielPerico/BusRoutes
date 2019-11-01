@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../main.dart';
 import 'cadastro.dart';
+import 'map.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -8,6 +9,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  Position position;
+
   @override
   Widget build(BuildContext context) {
     FocusNode _focusNode = new FocusNode();
@@ -138,11 +142,12 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.only(bottom: 10),
                           child: new InkWell(
                               child: new Text('Entrar como convidado.',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),
-                              onTap: () {
+                              onTap: () async{
+                                position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Cadastro()));
+                                        builder: (context) => map(latitude: position.latitude,longitude: position.longitude,)));
                               }
                           ),
                         )
