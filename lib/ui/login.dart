@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'cadastro.dart';
-import 'map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'page.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -142,12 +142,11 @@ class _LoginState extends State<Login> {
                           padding: EdgeInsets.only(bottom: 10),
                           child: new InkWell(
                               child: new Text('Entrar como convidado.',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),
-                              onTap: () async{
-                                position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+                              onTap: (){
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => map(latitude: position.latitude,longitude: position.longitude,)));
+                                        builder: (context) => home()));
                               }
                           ),
                         )
