@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import '../helper/api.dart';
 
 class home extends StatefulWidget {
+  final Api api;
+  int login_id;
+
+  home(this.login_id,this.api);
   @override
   _homeState createState() => _homeState();
 }
