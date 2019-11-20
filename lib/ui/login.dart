@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'cadastro.dart';
 import 'package:geolocator/geolocator.dart';
 import '../helper/api.dart';
-import '../helper/login_helper.dart';
+import '../helper/class_helper.dart';
 import 'page.dart';
 
 class Login extends StatefulWidget {
@@ -15,11 +15,11 @@ class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   LoginHelper helper = LoginHelper();
+  FocusNode _focus = new FocusNode();
   Api api = new Api();
 
   @override
   Widget build(BuildContext context) {
-    FocusNode _focusNode = new FocusNode();
     return new Scaffold(
         appBar: PreferredSize(
           child: AppBar(
@@ -62,6 +62,7 @@ class _LoginState extends State<Login> {
                         child: new Column(children: <Widget>[
                           new Padding(
                             child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
                                 controller: _emailController,
                                 validator: (value) {
                                   if (value.isEmpty) {
@@ -90,7 +91,6 @@ class _LoginState extends State<Login> {
                           ),
                           new Padding(
                             child: new TextFormField(
-                                focusNode: _focusNode,
                                 controller: _senhaController,
                                 validator: (value) {
                                   if (value.isEmpty) {
@@ -131,7 +131,7 @@ class _LoginState extends State<Login> {
                                       if (user != null) {
                                         helper.saveLogado(user.id,'token_padrao');
                                         Navigator.pop(context);
-                                        await Navigator.push(
+                                        await Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => home(user.id, Api(token: "token_padrao"))));
@@ -143,6 +143,7 @@ class _LoginState extends State<Login> {
                                       borderSide: BorderSide(
                                           color: Colors.amberAccent)),
                                   child: Text("Confirmar"),
+                                  focusNode: _focus,
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 40.0, vertical: 15.0),
                                   color: Colors.amber,

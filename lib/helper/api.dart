@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'login_helper.dart';
+import 'class_helper.dart';
 import 'dart:developer' as developer;
 
-const BASE_URL = "10.10.196.190/REST/";
+const BASE_URL = "http://10.10.196.190/busroutes/REST/";
 
 class Api {
   String token;
@@ -32,6 +32,22 @@ class Api {
       Login2 dadosJson = new Login2.fromMap(json.decode(response.body));
       return dadosJson;
     } else {
+      return null;
+    }
+  }
+
+  Future<List<Noticia>> noticias()async{
+    http.Response response = await http.get(BASE_URL + "Noticias/3",
+        headers: {'APIKEY' :token, 'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      List<Noticia> noticias = json.decode(response.body).map<Noticia>((map) {
+        return Noticia.fromJson(map);
+      }).toList();
+      print(noticias);
+      return noticias;
+    }else{
       return null;
     }
   }
