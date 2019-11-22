@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../helper/api.dart';
+import '../helper/class_helper.dart';
+import 'page.dart';
 
 class Cadastro extends StatefulWidget {
   @override
@@ -6,6 +9,12 @@ class Cadastro extends StatefulWidget {
 }
 
 class _CadastroState extends State<Cadastro> {
+  final _formCadastro = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _nomeController = TextEditingController();
+  final _senhaController = TextEditingController();
+  LoginHelper helper = LoginHelper();
+  Api api = new Api();
   FocusNode _focusNode = new FocusNode();
 
   @override
@@ -50,110 +59,151 @@ class _CadastroState extends State<Cadastro> {
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(15))),
                       child: new Column(children: <Widget>[
-                        new Padding(
-                          child: TextFormField(
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                  hoverColor: Colors.purple,
-                                  labelStyle:
+                        new Form(
+                          key: _formCadastro,
+                            child: Column(
+                          children: <Widget>[
+                            new Padding(
+                              child: TextFormField(
+                                  style: TextStyle(color: Colors.black),
+                                  controller: _nomeController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Digite seu nome';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                      hoverColor: Colors.purple,
+                                      labelStyle:
                                       new TextStyle(color: Colors.purple),
-                                  focusColor: Colors.purple,
-                                  labelText: "Nome",
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
+                                      focusColor: Colors.purple,
+                                      labelText: "Nome",
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ))),
-                          padding: const EdgeInsets.all(15.0),
-                        ),
-                        new Padding(
-                          child: new TextFormField(
-                              style: TextStyle(color: Colors.black),
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  hoverColor: Colors.purple,
-                                  labelStyle:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ))),
+                              padding: const EdgeInsets.all(15.0),
+                            ),
+                            new Padding(
+                              child: new TextFormField(
+                                  controller: _senhaController,
+                                  style: TextStyle(color: Colors.black),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Digite sua senha';
+                                    }
+                                    return null;
+                                  },
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      hoverColor: Colors.purple,
+                                      labelStyle:
                                       new TextStyle(color: Colors.purple),
-                                  focusColor: Colors.purple,
-                                  labelText: "Senha",
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
+                                      focusColor: Colors.purple,
+                                      labelText: "Senha",
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ))),
-                          padding: const EdgeInsets.all(15.0),
-                        ),
-                        new Padding(
-                          child: new TextFormField(
-                              focusNode: _focusNode,
-                              style: TextStyle(color: Colors.black),
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  hoverColor: Colors.purple,
-                                  labelStyle:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ))),
+                              padding: const EdgeInsets.all(15.0),
+                            ),
+                            new Padding(
+                              child: new TextFormField(
+                                  controller: _emailController,
+                                  focusNode: _focusNode,
+                                  style: TextStyle(color: Colors.black),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Digite seu email';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                      hoverColor: Colors.purple,
+                                      labelStyle:
                                       new TextStyle(color: Colors.purple),
-                                  focusColor: Colors.purple,
-                                  labelText: "Email",
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide:
+                                      focusColor: Colors.purple,
+                                      labelText: "Email",
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
                                         BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ))),
-                          padding: const EdgeInsets.all(15.0),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0, bottom: 10),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              RaisedButton(
-                                onPressed: () {},
-                                shape: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ))),
+                              padding: const EdgeInsets.all(15.0),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 20.0, bottom: 10),
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    onPressed: () async {
+                                      if (_formCadastro.currentState.validate()) {
+                                        Login2 user = await api.cadastro(
+                                            _nomeController.text,_emailController.text, _senhaController.text);
+                                        if (user != null) {
+                                          helper.saveLogado(user.id,'token_padrao');
+                                          Navigator.pop(context);
+                                          await Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => home(user.id, Api(token: "token_padrao"))));
+                                        }
+                                      }
+                                    },
+                                    shape: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderSide:
                                         BorderSide(color: Colors.amberAccent)),
-                                child: Text("Confirmar"),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 40.0, vertical: 15.0),
-                                color: Colors.amber,
-                                textColor: Colors.black,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 30),
-                              ),
-                              RaisedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                shape: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide:
+                                    child: Text("Confirmar"),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 40.0, vertical: 15.0),
+                                    color: Colors.amber,
+                                    textColor: Colors.black,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15.0, vertical: 30),
+                                  ),
+                                  RaisedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    shape: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderSide:
                                         BorderSide(color: Colors.amberAccent)),
-                                child: Text("Cancelar"),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 40.0, vertical: 15.0),
-                                color: Colors.amber,
-                                textColor: Colors.black,
-                              )
-                            ],
-                          ),
-                        ),
+                                    child: Text("Cancelar"),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 40.0, vertical: 15.0),
+                                    color: Colors.amber,
+                                    textColor: Colors.black,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ))
+
                       ]),
                     ))
               ],

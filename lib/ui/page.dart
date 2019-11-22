@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../helper/api.dart';
 import '../helper/class_helper.dart';
+import '../noticia.dart';
 
 class home extends StatefulWidget {
   final Api api;
-  int login_id;
+  dynamic login_id;
 
   home(this.login_id, this.api);
 
@@ -15,6 +16,8 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   LoginHelper helper = LoginHelper();
   List<Noticia> noticia = List();
+
+  void _showOverlay(BuildContext context) {}
 
   @override
   void initState() {
@@ -115,12 +118,25 @@ class _homeState extends State<home> {
           },
           body: Center(
               child: WillPopScope(
-                  child: ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemCount: noticia.length,
-                      itemBuilder: (context, index) {
-                        return _noticiaCard(context, index);
-                      }),
+                child:
+                    Stack(
+                        children: <Widget>[
+                          Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Text('Noticias:'),
+                          ),
+                          ListView.builder(
+                              padding: EdgeInsets.all(10.0),
+                              itemCount: noticia.length,
+                              itemBuilder: (context, index) {
+                                return _noticiaCard(context, index);
+                              }),
+                        ],
+                    ),
+
+                  /**/
+
+
+
                   onWillPop: () {
                     return null;
                   })),
@@ -141,46 +157,11 @@ class _homeState extends State<home> {
               )),
         ),
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SimpleDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                children: <Widget>[
-                  Form(
-                    child: Column(
-                      textDirection: TextDirection.ltr,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(3.0),
-                          child: Text(noticia[index].titulo),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Text(noticia[index].minidescricao +
-                                '\n' +
-                                noticia[index].descricao,style: TextStyle(),)),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                '\nEscrito por: ' + noticia[index].nome,
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              );
-            },
-          );
+          Navigator.of(context).push(TutorialOverlay(
+              nome: noticia[index].nome,
+              minidescricao: noticia[index].minidescricao,
+              descricao: noticia[index].descricao,
+              titulo: noticia[index].titulo));
         });
   }
 

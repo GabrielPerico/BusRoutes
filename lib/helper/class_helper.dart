@@ -12,7 +12,7 @@ class LoginHelper {
 
   Databases databases = new Databases();
 
-  Future<bool> saveLogado(int login_id, String token) async {
+  Future<bool> saveLogado(dynamic login_id, String token) async {
     deleteLogado();
     Database dbLogado = await databases.db;
     Logado logado = new Logado();
@@ -52,7 +52,7 @@ class LoginHelper {
 
 class Logado {
   dynamic id;
-  int logado_login_id;
+  dynamic logado_login_id;
   String logado_Token;
 
   Logado();
@@ -79,25 +79,24 @@ class Login2 {
   String email;
   String senha;
 
-  Login2();
+  Login2({this.id,this.email,this.senha,this.nome});
 
-  Login2.fromMap(Map map) {
-    id = int.parse(map[idLogin]);
-    email = map[emailLogin];
-    nome = map[nomeLogin];
-    senha = map[senhaLogin];
+  factory Login2.fromJson(Map<String, dynamic> json) {
+    return Login2(
+    id:json['id'],
+    email:json['email'],
+    nome: json['nome'],
+    senha: json['senha']
+    );
   }
 
-  Map toMap() {
-    Map<String, dynamic> map = {
-      emailLogin: email,
-      nomeLogin: nome,
-      senhaLogin: senha,
-    };
-    if (id != null) {
-      map[idLogin] = id;
-    }
-    return map;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['email'] = this.email;
+    data['nome'] = this.nome;
+    data['senha'] = this.senha;
+    return data;
   }
 
   @override

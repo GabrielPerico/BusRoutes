@@ -26,6 +26,7 @@ dependencies:
   geolocator: ^5.1.4+2
   sqflite: any
   http: any
+  async_loader: ^0.1.2
 
 dev_dependencies:
   flutter_test:

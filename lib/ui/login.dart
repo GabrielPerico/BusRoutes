@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import '../helper/api.dart';
 import '../helper/class_helper.dart';
 import 'page.dart';
+import 'package:async_loader/async_loader.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -186,7 +188,7 @@ class _LoginState extends State<Login> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => home(0,Api(token: "token_padrao"))));
+                                          builder: (context) =>home(0,Api(token: "token_padrao"))));
                                 }),
                           )
                         ]),

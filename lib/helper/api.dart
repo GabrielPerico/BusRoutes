@@ -16,8 +16,7 @@ class Api {
     http.Response response = await http.post(BASE_URL + "Usuario",
         body: jsonEncode({"senha": senha, "email": email}));
     if (response.statusCode == 200) {
-      print(response.body);
-      Login2 dadosJson = new Login2.fromMap(json.decode(response.body));
+      Login2 dadosJson = new Login2.fromJson(json.decode(response.body));
       return dadosJson;
     } else {
       return null;
@@ -27,9 +26,9 @@ class Api {
   Future<Login2> cadastro(String nome, String email, String senha) async {
     http.Response response = await http.post(BASE_URL + "Usuario/Register",
         body: jsonEncode({"nome": nome, "email": email, "senha": senha}));
+    print(response.body);
     if (response.statusCode == 200) {
-      print(response.body);
-      Login2 dadosJson = new Login2.fromMap(json.decode(response.body));
+      Login2 dadosJson = new Login2.fromJson(json.decode(response.body));
       return dadosJson;
     } else {
       return null;
@@ -41,11 +40,9 @@ class Api {
         headers: {'APIKEY' :token, 'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      print(response.body);
       List<Noticia> noticias = json.decode(response.body).map<Noticia>((map) {
         return Noticia.fromJson(map);
       }).toList();
-      print(noticias);
       return noticias;
     }else{
       return null;
