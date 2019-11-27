@@ -5,6 +5,7 @@ import '../helper/api.dart';
 import '../helper/class_helper.dart';
 import 'page.dart';
 import 'package:async_loader/async_loader.dart';
+import 'package:loading/loading.dart';
 
 
 class Login extends StatefulWidget {
@@ -13,6 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formLogin = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
@@ -23,6 +25,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
         appBar: PreferredSize(
           child: AppBar(
             backgroundColor: Colors.amber,
@@ -128,6 +131,15 @@ class _LoginState extends State<Login> {
                                 RaisedButton(
                                   onPressed: () async {
                                     if (_formLogin.currentState.validate()) {
+                                      _scaffoldKey.currentState.showSnackBar(
+                                          new SnackBar(duration: new Duration(seconds: 4),backgroundColor: Colors.white70, content:
+                                          new Row(
+                                            children: <Widget>[
+                                              new CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.blueAccent),),
+                                              new Text("  Carregando...",style: TextStyle(color: Colors.black54),)
+                                            ],
+                                          ),
+                                          ));
                                       Login2 user = await api.login(
                                           _emailController.text, _senhaController.text);
                                       if (user != null) {

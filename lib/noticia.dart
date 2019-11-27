@@ -40,34 +40,42 @@ class TutorialOverlay extends ModalRoute<void> {
   }
 
   Widget _buildOverlayContent(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            this.titulo,
-            style: TextStyle(color: Colors.black, fontSize: 30.0),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Text(this.descricao),
-          ),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  'Escrito por: ' + this.nome,
-                  style: TextStyle(color: Colors.grey),
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(15),
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  this.titulo,
+                  style: TextStyle(color: Colors.black, fontSize: 30.0),
                 ),
-              ),
-            ],
-          ),
-          RaisedButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Sair'),
-          )
-        ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  child: Text(this.descricao),
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Text(
+                        'Escrito por: ' + this.nome,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+                RaisedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Sair'),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
