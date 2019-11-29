@@ -22,13 +22,13 @@ class PertoDeMim extends StatefulWidget {
 
 class _PertoDeMimState extends State<PertoDeMim> {
   Completer<GoogleMapController> _controller = Completer();
-
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print('Long:' + widget.long.toString() + '\n Lat:' + widget.lat.toString());
+    _pegarRotasPerto;
   }
 
   double ZoomVal = 5.0;
@@ -66,17 +66,18 @@ class _PertoDeMimState extends State<PertoDeMim> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
-        markers: {smoMarker(widget.lat, widget.long)},
-        trafficEnabled: true,
+        markers: _markers,myLocationEnabled: true,
       ),
     );
   }
-}
 
-Marker smoMarker(double latitude, longitude) {
-  return Marker(
-      markerId: MarkerId('smoMarker'),
-      position: LatLng(latitude, longitude),
-      infoWindow: InfoWindow(title: "casa"),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue));
+  void _pegarRotasPerto() async{
+    setState(() {
+
+      _markers.add(
+        Marker(markerId: null)
+
+      );
+    });
+  }
 }

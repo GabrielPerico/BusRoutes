@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'class_helper.dart';
 import 'dart:developer' as developer;
 
-const BASE_URL = "http://192.168.1.9/busroutes/REST/";
+const BASE_URL = "http://10.10.196.190/busroutes/REST/";
 
 class Api {
   String token;
