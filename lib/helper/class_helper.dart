@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:sqflite/sqflite.dart';
 import '../utils/string.dart';
 import '../helper/databases.dart';
@@ -79,15 +80,14 @@ class Login2 {
   String email;
   String senha;
 
-  Login2({this.id,this.email,this.senha,this.nome});
+  Login2({this.id, this.email, this.senha, this.nome});
 
   factory Login2.fromJson(Map<String, dynamic> json) {
     return Login2(
-    id:json['id'],
-    email:json['email'],
-    nome: json['nome'],
-    senha: json['senha']
-    );
+        id: json['id'],
+        email: json['email'],
+        nome: json['nome'],
+        senha: json['senha']);
   }
 
   Map<String, dynamic> toJson() {
@@ -101,7 +101,7 @@ class Login2 {
 
   @override
   String toString() {
-    return "Login(id: $id, name: $nome, email: $email, senha: $senha)";
+    return "Login2(id: $id, name: $nome, email: $email, senha: $senha)";
   }
 }
 
@@ -109,17 +109,22 @@ class Noticia {
   dynamic id, id_usuario;
   String titulo, descricao, minidescricao, nome;
 
-  Noticia({this.id, this.id_usuario, this.titulo, this.descricao, this.minidescricao, this.nome});
+  Noticia(
+      {this.id,
+      this.id_usuario,
+      this.titulo,
+      this.descricao,
+      this.minidescricao,
+      this.nome});
 
   factory Noticia.fromJson(Map<String, dynamic> json) {
     return Noticia(
-      id:json['id'],
-      titulo:json['titulo'],
-      descricao: json['descricao'],
-      minidescricao: json['minidescricao'],
-      id_usuario: json['id_usuario'],
-      nome: json['nome']
-    );
+        id: json['id'],
+        titulo: json['titulo'],
+        descricao: json['descricao'],
+        minidescricao: json['minidescricao'],
+        id_usuario: json['id_usuario'],
+        nome: json['nome']);
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +140,86 @@ class Noticia {
 
   @override
   String toString() {
-    return "Login(id: $id, titulo: $titulo, descricao: $descricao, minidescricao: $minidescricao, id_usuario: $id_usuario, nome: $nome)";
+    return "Noticia(id: $id, titulo: $titulo, descricao: $descricao, minidescricao: $minidescricao, id_usuario: $id_usuario, nome: $nome)";
+  }
+}
+
+class Rotas {
+  dynamic id, horario;
+  double lat, lng, passagem, passagemE;
+
+      Rotas(
+      {this.id,
+      this.lat,
+      this.lng,
+      this.horario,
+      this.passagem,
+      this.passagemE});
+
+  factory Rotas.fromJson(Map<String, dynamic> json) {
+    return Rotas(
+        id: json['id'],
+        lat: double.parse(json['lat']),
+        lng: double.parse(json['lng']),
+        horario: json['horario'],
+        passagem: double.parse(json['passagem']),
+        passagemE: double.parse(json['passagemE']));
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['lat'] = this.lat;
+    data['lng'] = this.lng;
+    data['horario'] = this.horario;
+    data['passagem'] = this.passagem;
+    data['passagemE'] = this.passagemE;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return "Rota(id: $id, lat: $lat, lng: $lng, horario: $horario, passagem: $passagem, passagemE: $passagemE)";
+  }
+}
+
+class Onibus {
+  dynamic id, placa,modelo,intermunicipal,img_onibus,data_registro,id_empresa;
+
+  Onibus(
+      {this.id,
+        this.placa,
+        this.modelo,
+        this.intermunicipal,
+        this.img_onibus,
+        this.data_registro,
+      this.id_empresa});
+
+  factory Onibus.fromJson(Map<String, dynamic> json) {
+    return Onibus(
+        id: json['id'],
+        placa: json['placa'],
+        modelo: json['modelo'],
+        intermunicipal: json['intermunicipal'],
+        img_onibus: json['img_onibus'],
+        data_registro: json['data_registro'],
+        id_empresa: json['id_empresa']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['placa'] = this.placa;
+    data['modelo'] = this.modelo;
+    data['intermunicipal'] = this.intermunicipal;
+    data['img_onibus'] = this.img_onibus;
+    data['data_registro'] = this.data_registro;
+    data['empresa'] = this.id_empresa;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return "Rota(id: $id, placa: $placa, modelo: $modelo, intermunicipal: $intermunicipal, img_onibus: $img_onibus, id_empresa: $id_empresa,data_registro: $data_registro)";
   }
 }

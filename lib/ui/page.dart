@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../helper/api.dart';
 import '../helper/class_helper.dart';
 import '../noticia.dart';
+import 'procurarlocal.dart';
 import 'pertodemim.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -20,11 +21,13 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   LoginHelper helper = LoginHelper();
   List<Noticia> noticia = List();
+  List<Onibus> onibus = List();
 
 
   @override
   void initState() {
     _getAllNoticias();
+    _getAllOnibus();
     super.initState();
   }
 
@@ -34,7 +37,8 @@ class _homeState extends State<home> {
       body: DefaultTabController(
         length: 2,
         child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          headerSliverBuilder: (context, innerBoxIsScrolled) =>
+          [
             SliverOverlapAbsorber(
               child: SliverSafeArea(
                 top: false,
@@ -60,12 +64,21 @@ class _homeState extends State<home> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               RaisedButton(
-                                onPressed: () async{
-                                  Position position = await Geolocator().getCurrentPosition(locationPermissionLevel: GeolocationPermission.locationAlways,desiredAccuracy: LocationAccuracy.bestForNavigation);
+                                onPressed: () async {
+                                  Position position = await Geolocator()
+                                      .getCurrentPosition(
+                                      locationPermissionLevel: GeolocationPermission
+                                          .locationAlways,
+                                      desiredAccuracy: LocationAccuracy
+                                          .bestForNavigation);
                                   await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>PertoDeMim(lat: position.latitude,long: position.longitude)));
+                                          builder: (context) =>
+                                              PertoDeMim(position.latitude,
+                                                  position.longitude,
+                                                  Api(token: widget.api
+                                                      .token))));
                                 },
                                 textColor: Colors.white,
                                 padding: const EdgeInsets.all(0.0),
@@ -83,15 +96,28 @@ class _homeState extends State<home> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0))),
                                   padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                   child: const Text(
                                     'Perto de mim',
                                   ),
                                 ),
                               ),
                               RaisedButton(
-                                onPressed: () {
-                                  print('btn2');
+                                onPressed: () async {
+                                  Position position = await Geolocator()
+                                      .getCurrentPosition(
+                                      locationPermissionLevel: GeolocationPermission
+                                          .locationAlways,
+                                      desiredAccuracy: LocationAccuracy
+                                          .bestForNavigation);
+                                  await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProcurarLocal(position.latitude,
+                                                  position.longitude,
+                                                  Api(token: widget.api
+                                                      .token))));
                                 },
                                 textColor: Colors.white,
                                 padding: const EdgeInsets.all(0.0),
@@ -109,7 +135,7 @@ class _homeState extends State<home> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0))),
                                   padding:
-                                      const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                  const EdgeInsets.fromLTRB(5, 10, 5, 10),
                                   child: const Text(
                                     'Escolher destino',
                                   ),
@@ -140,6 +166,7 @@ class _homeState extends State<home> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Text('Noticias',
                                     style: TextStyle(
@@ -153,9 +180,34 @@ class _homeState extends State<home> {
                             padding: EdgeInsets.only(top: 25),
                             child: ListView.builder(
                                 padding: EdgeInsets.all(10.0),
-                                itemCount: noticia.length,
+                                itemCount: (noticia.length != null)?noticia.length:0,
                                 itemBuilder: (context, index) {
                                   return _noticiaCard(context, index);
+                                }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(15, 370, 15, 0
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('Ultimos Onibus:',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 420),
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.all(10.0),
+                                itemCount: (onibus.length != null)?onibus.length:0,
+                                itemBuilder: (context, index) {
+                                  return _onibusCard(context, index);
                                 }),
                           )
                         ],
@@ -164,7 +216,11 @@ class _homeState extends State<home> {
                         return null;
                       })),
             ),
-            onRefresh: _getAllNoticias,
+            onRefresh: () {
+              _getAllNoticias();
+              _getAllOnibus();
+              return null;
+            },
           ),
         ),
       ),
@@ -191,11 +247,33 @@ class _homeState extends State<home> {
         });
   }
 
+  Widget _onibusCard(BuildContext context, int index) {
+    return GestureDetector(
+        child: Card(
+          child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ListTile(
+                title: Text(onibus[index].modelo),
+                subtitle: Text(onibus[index].data_registro.toString()),
+                trailing: Image.network(onibus[index].img_onibus.toString()),
+              )),
+        ));
+  }
+
   Future<void> _getAllNoticias() async {
     await widget.api.noticias().then((list) {
-      Future.delayed(Duration(seconds: 5));
+      Future.delayed(Duration(seconds: 15));
       setState(() {
         noticia = list;
+      });
+    });
+  }
+
+  Future<void> _getAllOnibus() async {
+    await widget.api.PegarOnibus().then((list) {
+    Future.delayed(Duration(seconds: 15));
+      setState(() {
+        onibus = list;
       });
     });
   }

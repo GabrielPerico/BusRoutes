@@ -5,23 +5,25 @@ import '../helper/api.dart';
 import '../helper/class_helper.dart';
 import 'package:random_color/random_color.dart';
 
-class PertoDeMim extends StatefulWidget {
+class ProcurarLocal extends StatefulWidget {
   double lat, long;
   Api api;
 
-  PertoDeMim(this.lat, this.long, this.api);
+  ProcurarLocal(this.lat, this.long, this.api);
 
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<PertoDeMim> {
+class _MapScreenState extends State<ProcurarLocal> {
   RandomColor _randomColor = RandomColor();
   List<Rotas> rotas = List();
   GoogleMapController mapController;
   int coutpoly = 0;
   Color color;
   LatLng lastlatlng;
+  LatLng currlatlngmap;
+  CameraPosition cameraPosition;
   Map<MarkerId, Marker> markers = {};
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
@@ -31,7 +33,6 @@ class _MapScreenState extends State<PertoDeMim> {
   @override
   void initState() {
     super.initState();
-    _pegarRotasPerto();
   }
 
   @override
@@ -39,33 +40,38 @@ class _MapScreenState extends State<PertoDeMim> {
     return SafeArea(
       child: Scaffold(
           body: GoogleMap(
-        initialCameraPosition:
+            onCameraMove: (object) => {currlatlngmap = object.target},
+            initialCameraPosition:
             CameraPosition(target: LatLng(widget.lat, widget.long), zoom: 15),
-        myLocationEnabled: true,
-        tiltGesturesEnabled: true,
-        compassEnabled: true,
-        scrollGesturesEnabled: true,
-        zoomGesturesEnabled: true,
-        onMapCreated: _onMapCreated,
-        markers: Set<Marker>.of(markers.values),
-        polylines: Set<Polyline>.of(polylines.values),
-      )),
+            myLocationEnabled: true,
+            tiltGesturesEnabled: true,
+            compassEnabled: true,
+            scrollGesturesEnabled: true,
+            zoomGesturesEnabled: true,
+            onMapCreated: _onMapCreated,
+            markers: (Set<Marker>.of(markers.values) != null)?Set<Marker>.of(markers.values):null,
+            onLongPress: (object) => {_pegarRotas(object.latitude,object.longitude)},
+            polylines: (Set<Polyline>.of(polylines.values) != null)?Set<Polyline>.of(polylines.values):null,
+          )),
     );
   }
 
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
+
     print('☺ ' + widget.lat.toString() + '  ' + widget.long.toString());
   }
 
-  _addMarker(LatLng position, String id,horario,passagem,passagemE) {
+  _addMarker(LatLng position, String id,{String horario,passagem,passagemE}) {
     MarkerId markerId = MarkerId(id);
     Marker marker = Marker(
         markerId: markerId,
         icon: BitmapDescriptor.fromAsset('img/busstop.png'),
-        infoWindow: InfoWindow(title: 'Passagem: R\$'+ passagem+' Estudante: R\$'+passagemE,snippet: 'Chegada as ' + horario),
+        infoWindow: (horario != null)?InfoWindow(title: 'Passagem: R\$'+ passagem+' Estudante: R\$'+passagemE,snippet: 'Chegada as ' + horario):null,
         position: position);
-    markers[markerId] = marker;
+    setState(() {
+      markers[markerId] = marker;
+    });
   }
 
   _addPolyLine() {
@@ -96,13 +102,21 @@ class _MapScreenState extends State<PertoDeMim> {
     _addPolyLine();
   }
 
-  _pegarRotasPerto() async {
-    await widget.api.RotasPerto(widget.lat, widget.long).then((list) {
-      list.forEach((id) => setState(() {
-            color = _randomColor.randomColor();
-            //polylineCoordinates.clear();
-            _atualizarRotas(id['id']);
-          }));
+  _pegarRotas(double lat,long) async {
+    await widget.api.RotasPerto(lat,long).then((list) {
+      if (list.length != 0) {
+        list.forEach((id) =>
+            setState(() {
+              color = _randomColor.randomColor();
+              markers.clear();
+              polylineCoordinates.clear();
+              _atualizarRotas(id['id']);
+            }));
+      }else{
+          polylines.clear();
+          markers.clear();
+          _addMarker(LatLng(lat, long), '1');
+      }
     });
   }
 
@@ -115,13 +129,13 @@ class _MapScreenState extends State<PertoDeMim> {
     lastlatlng = null;
 
     rotas.forEach((rota) => setState(() {
-          _addMarker(LatLng(rota.lat, rota.lng), rota.horario.toString(),rota.horario.toString(),rota.passagem.toString(),rota.passagemE.toString());
+      _addMarker(LatLng(rota.lat, rota.lng),rota.horario.toString(),horario:rota.horario.toString(),passagem: rota.passagem.toString(),passagemE:rota.passagemE.toString());
 
-          if (lastlatlng != null) {
-            _getPolyline(
-                lastlatlng.latitude, lastlatlng.longitude, rota.lat, rota.lng);
-          }
-          lastlatlng = LatLng(rota.lat, rota.lng);
-        }));
+      if (lastlatlng != null) {
+        _getPolyline(
+            lastlatlng.latitude, lastlatlng.longitude, rota.lat, rota.lng);
+      }
+      lastlatlng = LatLng(rota.lat, rota.lng);
+    }));
   }
 }

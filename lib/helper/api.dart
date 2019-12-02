@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'class_helper.dart';
-import 'dart:developer' as developer;
 
-const BASE_URL = "http://10.10.196.190/busroutes/REST/";
+const BASE_URL = "https://apibusroutes.000webhostapp.com/REST/";
 
 class Api {
   String token;
@@ -46,6 +44,44 @@ class Api {
         return Noticia.fromJson(map);
       }).toList();
       return noticias;
+    }else{
+      return null;
+    }
+  }
+
+  Future<List<dynamic>> RotasPerto(double lat,lng) async{
+    http.Response response = await http.post(BASE_URL + "Rotas/rotasPerto",
+      headers: {'APIKEY' :token, 'Content-Type': 'application/json', 'charset':'utf-8'} ,
+      body: jsonEncode({"lat":lat,"lng": lng}));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }else{
+      return null;
+    }
+  }
+  
+  Future<List<Rotas>> PegarRota(dynamic id) async{
+    http.Response response = await http.get(BASE_URL + "rotas/pegarRotas/"+id,
+      headers: {'APIKEY' :token, 'Content-Type': 'application/json', 'charset':'utf-8'}
+    );
+    if (response.statusCode == 200) {
+      List<Rotas> rotas = jsonDecode(response.body).map<Rotas>((map) {
+        return Rotas.fromJson(map);
+      }).toList();
+      return rotas;
+    }else{
+      return null;
+    }
+  }
+
+  Future<List<Onibus>> PegarOnibus() async{
+    http.Response response = await http.get(BASE_URL + "onibus/GetAllOnibus",
+        headers: {'APIKEY' :token, 'Content-Type': 'application/json', 'charset':'utf-8'});
+    if (response.statusCode == 200) {
+      List<Onibus> onibus = jsonDecode(response.body).map<Onibus>((map) {
+        return Onibus.fromJson(map);
+      }).toList();
+      return onibus;
     }else{
       return null;
     }
